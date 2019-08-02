@@ -49,18 +49,38 @@ X = [ones(m, 1) X];
 %                 initial_theta, options);
 %
 
+% Some useful variables, but better named
+n_samples = m ;
+n_features = n ;
 
+% all_theta is a matrix of classifiers. 
+% Each row is a theta classifier for a given label to classify.
+% Within the row, there is a value per feature used to classify.
+all_theta = zeros(num_labels, n_features+1);
 
+% Loop through all the labels one by one
+for currentLabel = 1:num_labels,
 
-
-
-
-
-
-
+  % zeros-out all the 'negative' labels: sets y at 1 for the right label; others to 0
+  currentY = (y == currentLabel);
+    
+  % temporary matrix to calculate the current classifier
+  currentTheta = zeros(n_features + 1, 1);
+  
+  % Sets options for fmincfg
+  options = optimset('GradObj', 'on', 'MaxIter', 50);
+  
+  % Run fmincg to obtain the optimal theta
+  % This function will return theta and the cost 
+  [currentResult] = fmincg ( ...
+                      @(t) (lrCostFunction(t, X, currentY, lambda)), ... %% function to optimise
+                            currentTheta, options);
+  
+  all_theta(currentLabel,:) = currentResult';
+  
+endfor
 
 
 % =========================================================================
-
 
 end
