@@ -1,22 +1,3 @@
-%% Machine Learning Online Class - Exercise 4 Neural Network Learning
-
-%  Instructions
-%  ------------
-% 
-%  This file contains code that helps you get started on the
-%  linear exercise. You will need to complete the following functions 
-%  in this exericse:
-%
-%     sigmoidGradient.m
-%     randInitializeWeights.m
-%     nnCostFunction.m
-%
-%  For this exercise, you will not need to change any code in this file,
-%  or any other files other than those mentioned above.
-%
-
-%% Initialization
-clear ; close all;
 
 %% Setup the parameters you will use for this exercise
 input_layer_size  = 400;  % 20x20 Input Images of Digits
@@ -35,16 +16,6 @@ fprintf('Loading and Visualizing Data ...\n')
 load('ex4data1.mat');
 m = size(X, 1);
 
-% Randomly select 100 data points to display
-sel = randperm(size(X, 1));
-sel = sel(1:100);
-
-displayData(X(sel, :));
-
-fprintf('Program paused. Press enter to continue.\n');
-%% pause;
-
-
 %% ================ Part 2: Loading Parameters ================
 % In this part of the exercise, we load some pre-initialized 
 % neural network parameters.
@@ -56,69 +27,6 @@ load('ex4weights.mat');
 
 % Unroll parameters 
 nn_params = [Theta1(:) ; Theta2(:)];
-
-%% ================ Part 3: Compute Cost (Feedforward) ================
-%  To the neural network, you should first start by implementing the
-%  feedforward part of the neural network that returns the cost only. You
-%  should complete the code in nnCostFunction.m to return cost. After
-%  implementing the feedforward to compute the cost, you can verify that
-%  your implementation is correct by verifying that you get the same cost
-%  as us for the fixed debugging parameters.
-%
-%  We suggest implementing the feedforward cost *without* regularization
-%  first so that it will be easier for you to debug. Later, in part 4, you
-%  will get to implement the regularized cost.
-%
-fprintf('\nFeedforward Using Neural Network ...\n')
-
-% Weight regularization parameter (we set this to 0 here).
-lambda = 0;
-
-J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
-                   num_labels, X, y, lambda);
-
-fprintf(['Cost at parameters (loaded from ex4weights): %f '...
-         '\n(this value should be about 0.287629)\n'], J);
-
-fprintf('\nProgram paused. Press enter to continue.\n');
-%% pause;
-
-%% =============== Part 4: Implement Regularization ===============
-%  Once your cost function implementation is correct, you should now
-%  continue to implement the regularization with the cost.
-%
-
-fprintf('\nChecking Cost Function (w/ Regularization) ... \n')
-
-% Weight regularization parameter (we set this to 1 here).
-lambda = 1;
-
-J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
-                   num_labels, X, y, lambda);
-
-fprintf(['Cost at parameters (loaded from ex4weights): %f '...
-         '\n(this value should be about 0.383770)\n'], J);
-
-fprintf('Program paused. Press enter to continue.\n');
-%% pause;
-
-
-%% ================ Part 5: Sigmoid Gradient  ================
-%  Before you start implementing the neural network, you will first
-%  implement the gradient for the sigmoid function. You should complete the
-%  code in the sigmoidGradient.m file.
-%
-
-fprintf('\nEvaluating sigmoid gradient...\n')
-
-g = sigmoidGradient([-1 -0.5 0 0.5 1]);
-fprintf('Sigmoid gradient evaluated at [-1 -0.5 0 0.5 1]:\n  ');
-fprintf('%f ', g);
-fprintf('\n\n');
-
-fprintf('Program paused. Press enter to continue.\n');
-%% pause;
-
 
 %% ================ Part 6: Initializing Pameters ================
 %  In this part of the exercise, you will be starting to implment a two
@@ -232,3 +140,4 @@ pred = predict(Theta1, Theta2, X);
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y)) * 100);
 
 
+ 

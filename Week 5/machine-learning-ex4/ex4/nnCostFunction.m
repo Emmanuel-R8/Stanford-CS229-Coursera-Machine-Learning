@@ -63,24 +63,94 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
+XnumSamples = size(X, 1);
+XnumFeatures = size(X, 2);
+
+% ---------------------------------------------------------------------------------------------------------------------
+% Each training result is given as the actual digit 1 -> 10 (=0) instead of 
+% binary classes. The training result matrix has the same format as the 
+% outputLayer matrix:
+% - row = samples
+% - column = 'probability' for each class
+trainingResult = zeros(XnumSamples, num_labels);
+for i = 1:num_labels, 
+  trainingResult(:,i) = (y == i);
+endfor
 
 
+% ---------------------------------------------------------------------------------------------------------------------
+% FORWARD PROGAGATION OF ENTIRE TRAINING SET
 
 
+% Calculates both z and a=sigmoid(z) since both may be useful during backpropagation
+XBiased = [ ones(XnumSamples, 1) X];
+hiddenLayerZ = XBiased * Theta1';
+hiddenLayerA = sigmoid(hiddenLayerZ);
+
+HBiased = [ ones(XnumSamples, 1) hiddenLayerA];
+outputLayerZ = HBiased * Theta2';
+outputLayerA = sigmoid(outputLayerZ);
 
 
+% ---------------------------------------------------------------------------------------------------------------------
+% MODEL ERROR - COST FUNCTION
+
+% log(h(x)) and log(1 - h(x))
+logOutput = log(outputLayerA);
+logOneMinusOutput = log (1 .- outputLayerA);
+
+J = trainingResult .* logOutput + (1 .- trainingResult) .* logOneMinusOutput;
+J = - 1 / XnumSamples * sum(J(:));
+
+% Regularisation cost of Theta matrices
+regCostTheta1 = sumsq( (Theta1(:, 2:end)) (:));
+regCostTheta2 = sumsq( (Theta2(:, 2:end)) (:));
+
+J += lambda / (2*XnumSamples) * (regCostTheta1 + regCostTheta2);
 
 
+% ---------------------------------------------------------------------------------------------------------------------
+% BACK-PROPAGATION
+
+%% Loop through each training example:
+for i = 1:XnumSamples,
+  
+  % Using the steps from the pdf.
+  
+  % STEP 1 already done in the forward prop.
+  currentResultA = outputLayerA(i,:)';
+
+  
+  % STEP 2:
+  delta3 = currentResultA - trainingResult(i,:)';
 
 
+  % Step 3:
+  delta2 = ( Theta2' * delta3 ) .* sigmoidGradient([1; hiddenLayerZ(i,:)(:)]);
+  delta2 = delta2(2:end,:);
+  
+  
+  % Step 4:
+  if i==1, 
+    bigDelta2  = delta3 * [1; hiddenLayerA(i,:)(:)]';
+  else
+    bigDelta2 += delta3 * [1; hiddenLayerA(i,:)(:)]';
+  endif
+  
+  if i==1, 
+    bigDelta1  = delta2 * [1; XBiased(i,:)(:)]';
+  else
+    bigDelta1 += delta2 * [1; XBiased(i,:)(:)]';
+  endif
+  
+endfor
+
+bigD1 = 1/XnumSamples * bigDelta1(:, 2:end);
+bigD2 = 1/XnumSamples * bigDelta2;
 
 
-
-
-
-
-
-% -------------------------------------------------------------
+Theta1_grad = bigD1 + [ zeros(hidden_layer_size, 1) (lambda / XnumSamples * Theta1(:, 2:end)) ];
+Theta2_grad = bigD2 + [ zeros(num_labels, 1) (lambda / XnumSamples* Theta2(:, 2:end)) ];
 
 % =========================================================================
 
