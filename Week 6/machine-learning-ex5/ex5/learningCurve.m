@@ -54,10 +54,22 @@ error_val   = zeros(m, 1);
 % ---------------------- Sample Solution ----------------------
 
 
+for i = 1:m,
+  
+  % Partial matrices
+  Xpartial = X(1:i,:);
+  ypartial = y(1:i,:);
+  
+  % Train on partial matrices
+  theta = trainLinearReg(Xpartial, ypartial, lambda);
 
-
-
-
+  trainingError = linearRegCostFunction(Xpartial, ypartial, theta, 0);
+  error_train(i) = trainingError(1);
+  
+  testError = linearRegCostFunction(Xval, yval, theta, 0);
+  error_val(i) = testError(1);
+  
+endfor
 
 % -------------------------------------------------------------
 

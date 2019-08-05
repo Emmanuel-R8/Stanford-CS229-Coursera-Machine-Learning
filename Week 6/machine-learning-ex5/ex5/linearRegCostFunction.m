@@ -19,15 +19,20 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
+% Number of samples
+numSamples = size(X, 1);
 
+% Cleaned theta for regularisation term
+modTheta = theta;
+modTheta(1,:) = 0;
 
+%fprintf('Size X:\n'); size(X)
+%fprintf('Size y:\n'); size(y)
+%fprintf('Size theta:\n'); size(theta)
+%fprintf('Size modTheta:\n'); size(modTheta)
 
-
-
-
-
-
-
+J    = 1 / (2*numSamples) * sumsq( (X * theta - y)(:) ) + lambda/(2*numSamples) * sumsq(modTheta(:));
+grad = 1 / (numSamples) * sum( (X * theta - y)(:) .* X )  + lambda/(numSamples) * modTheta' ;
 
 
 % =========================================================================
