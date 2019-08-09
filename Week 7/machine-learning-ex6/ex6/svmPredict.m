@@ -32,7 +32,7 @@ elseif strfind(func2str(model.kernelFunction), 'gaussianKernel')
     K = model.kernelFunction(1, 0) .^ K;
     K = bsxfun(@times, model.y', K);
     K = bsxfun(@times, model.alphas', K);
-    p = sum(K, 2);
+    p = sum(K, 2) + model.b;
 else
     % Other Non-linear kernel
     for i = 1:m

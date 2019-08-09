@@ -97,14 +97,12 @@ while ~isempty(email_contents)
     %       str2). It will return 1 only if the two strings are equivalent.
     %
 
-
-
-
-
-
-
-
-
+    [ exists, wordIndex] = max(strcmp(vocabList, str) == 1);
+    if exists, 
+      word_indices = [word_indices ; wordIndex];
+      fprintf('Word: %-20s     ----    Exists?: %5d    ----    index: %5d \n', str, exists, wordIndex);
+    endif  
+    
 
     % =============================================================
 
@@ -114,12 +112,15 @@ while ~isempty(email_contents)
         fprintf('\n');
         l = 0;
     end
-    fprintf('%s ', str);
+    %fprintf('%s ', str);
     l = l + length(str) + 1;
 
 end
 
 % Print footer
 fprintf('\n\n=========================\n');
+
+word_indices'
+
 
 end
